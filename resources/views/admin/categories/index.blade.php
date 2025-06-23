@@ -4,18 +4,18 @@
         'rotue' => route('admin.dashboard'),
     ],
     [
-        'name' => 'Familias',
+        'name' => 'Categorias',
     ],
 ]">
 
 
     <x-slot name="action">
-        <a class="btn btn-style" href="{{ route('admin.families.create') }}">
+        <a class="btn btn-style" href="{{ route('admin.categories.create') }}">
             Nuevo
         </a>
     </x-slot>
-    
-    @if ($families->count())
+
+    @if ($categories->count())
 
         <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -25,7 +25,10 @@
                             ID
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Name
+                            Nombre
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Familia
                         </th>
                         <th scope="col" class="px-6 py-3">
 
@@ -34,17 +37,20 @@
                 </thead>
                 <tbody>
 
-                    @foreach ($families as $family)
+                    @foreach ($categories as $category)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
                             <th scope="row"
                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $family->id }}
+                                {{ $category->id }}
                             </th>
                             <td class="px-6 py-4">
-                                {{ $family->name }}
+                                {{ $category->name }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ route('admin.families.edit', $family) }}">
+                                {{ $category->family->name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="{{ route('admin.categories.edit', $category) }}">
                                     Editar
                                 </a>
                             </td>
@@ -55,7 +61,7 @@
         </div>
 
         <div class="mt-4">
-            {{ $families->links() }}
+            {{ $categories->links() }}
         </div>
     @else
         <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
@@ -67,10 +73,9 @@
             </svg>
             <span class="sr-only">Info</span>
             <div>
-                <span class="font-medium"> alert!</span> No hay familias creadas actualmente.
+                <span class="font-medium"> alert!</span> No hay categorias creadas actualmente.
             </div>
         </div>
     @endif
-
 
 </x-admin-layout>

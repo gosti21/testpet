@@ -6,11 +6,35 @@
             'route' => route('admin.dashboard'),
             'active' => request()->routeIs('admin.dashboard'),
         ],
-                [
+        [
+            'icon' => 'fa-solid fa-cog',
+            'name' => 'Opciones',
+            'route' => route('admin.options.index'),
+            'active' => request()->routeIs('admin.options.*'),
+        ],
+        [
             'icon' => 'fa-solid fa-box-open',
             'name' => 'Familias',
             'route' => route('admin.families.index'),
             'active' => request()->routeIs('admin.families.*'),
+        ],
+        [
+            'icon' => 'fa-solid fa-tags',
+            'name' => 'Categorias',
+            'route' => route('admin.categories.index'),
+            'active' => request()->routeIs('admin.categories.*'),
+        ],
+        [
+            'icon' => 'fa-solid fa-tag',
+            'name' => 'Subcategorias',
+            'route' => route('admin.subcategories.index'),
+            'active' => request()->routeIs('admin.subcategories.*'),
+        ],
+        [
+            'icon' => 'fa-solid fa-box',
+            'name' => 'Productos',
+            'route' => route('admin.products.index'),
+            'active' => request()->routeIs('admin.products.*'),
         ],
     ];
 @endphp
@@ -28,15 +52,15 @@
         <ul class="space-y-2 font-medium">
             @foreach ($links as $link)
                 <li>
-                    <a href="{{$link['route']}}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ $link['active'] ? 'bg-gary-100' : ''}}">
+                    <a href="{{ $link['route'] }}"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ $link['active'] ? 'bg-gary-100' : '' }}">
 
                         <span class="inline-flex w-6 h-6 justify-center items-center">
-                            <i class="{{$link['icon']}} text-gray-900"></i>
+                            <i class="{{ $link['icon'] }} text-gray-900"></i>
                         </span>
 
                         <span class="ms-3">
-                            {{$link['name']}}
+                            {{ $link['name'] }}
                         </span>
                     </a>
                 </li>

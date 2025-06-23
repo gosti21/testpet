@@ -311,10 +311,12 @@ class FamilySeeder extends Seeder
                 ],
             ],
             'Ofertas' => [
-                'Descuentos',
-                'Combos',
-                'Nuevos productos',
-                'Liquidaciones',
+                'General' => [
+                    'Descuentos',
+                    'Combos',
+                    'Nuevos productos',
+                    'Liquidaciones',
+                ],
             ],
         ];
         foreach ($families as $family => $categories) {

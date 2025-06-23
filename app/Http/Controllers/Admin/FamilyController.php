@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Family;
 use Illuminate\Http\Request;
+use Symfony\Component\VarDumper\Caster\RedisCaster;
 
 class FamilyController extends Controller
 {
@@ -13,8 +14,7 @@ class FamilyController extends Controller
      */
     public function index()
     {
-        $families = Family::orderBy('id', 'desc')
-            ->paginate();
+        $families = Family::orderBy('id', 'desc')->paginate();
         return view('admin.families.index', compact('families'));
     }
 
@@ -24,6 +24,7 @@ class FamilyController extends Controller
     public function create()
     {
         return view('admin.families.create');
+
     }
 
     /**
@@ -36,6 +37,12 @@ class FamilyController extends Controller
         ]);
 
         Family::create($request->all());
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien',
+            'text' => 'Familia creada correctamente'
+        ]);
 
         return redirect()->route('admin.families.index');
     }
@@ -67,6 +74,12 @@ class FamilyController extends Controller
 
         $family->update($request->all());
 
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien',
+            'text' => 'Familia actualizada correctamente'
+        ]);
+
         return redirect()->route('admin.families.edit', $family);
     }
 
@@ -75,7 +88,23 @@ class FamilyController extends Controller
      */
     public function destroy(Family $family)
     {
+
+        if ($family->categories->count() > 0) {
+
+            session()->flash('swal', [
+                'icon' => 'errors',
+                'title' => 'Ups',
+                'text' => 'No se puede elimiar esta familia asociada',
+            ]);
+            return redirect()->route('admin.families.edit', $family);
+        }
         $family->delete();
+
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Bien hecho',
+            'text' => 'Familia eliminada correctamente',
+        ]);
 
         return redirect()->route('admin.families.index');
     }
