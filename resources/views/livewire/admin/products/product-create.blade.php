@@ -3,8 +3,6 @@
 
     <form wire:submit="store">
 
-
-
         <figure class="mb-4 relative">
 
             <div class="absolute top-8 right-8">

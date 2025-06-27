@@ -1,11 +1,11 @@
 <x-admin-layout :breadcrumbs="[
     [
         'name' => 'Dashboard',
-        'rotue' => route('admin.dashboard'),
+        'route' => route('admin.dashboard'),
     ],
     [
         'name' => 'Familias',
-        'rotue' => route('admin.families.index'),
+        'route' => route('admin.families.index'),
     ],
     [
         'name' => $family->name,

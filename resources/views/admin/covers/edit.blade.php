@@ -4,10 +4,10 @@
         'route' => route('admin.dashboard'),
     ],
     [
-        'name' => 'Opciones',
+        'name' => 'Portadas',
     ],
 ]">
 
-    @livewire('admin.options.manage-options')
+
 
 </x-admin-layout>

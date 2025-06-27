@@ -16,7 +16,9 @@ class FamilySeeder extends Seeder
     public function run(): void
     {
 
-
+        Subcategory::truncate();
+        Category::truncate();
+        Family::truncate();
         $families = [
             'Alimentos' => [
                 'Perros' => [

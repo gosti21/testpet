@@ -11,13 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('variants', function (Blueprint $table) {
+        Schema::create('covers', function (Blueprint $table) {
             $table->id();
-            $table->string('sku')->nullable();
-            $table->string('image_path')->nullable();
 
-            $table->foreignId('product_id')
-                    ->constrained();
+            $table->string('image_path');
+            $table->string('title');
+
+            $table->datetime('start_at');
+            $table->datetime('end_at')->nullable();
+
+            $table->boolean('is_active')->default(true);
+
+            $table->integer('order')->default(0);
+
 
             $table->timestamps();
         });
@@ -28,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('variants');
+        Schema::dropIfExists('covers');
     }
 };

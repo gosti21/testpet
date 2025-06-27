@@ -1,7 +1,7 @@
 <x-admin-layout :breadcrumbs="[
     [
         'name' => 'Dashboard',
-        'rotue' => route('admin.dashboard'),
+        'route' => route('admin.dashboard'),
     ],
     [
         'name' => 'Productos',
@@ -14,5 +14,5 @@
 
     @livewire('admin.products.product-create')
 
-    
+
 </x-admin-layout>

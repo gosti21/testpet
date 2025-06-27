@@ -1,7 +1,7 @@
 <x-admin-layout :breadcrumbs="[
     [
         'name' => 'Dashboard',
-        'rotue' => route('admin.dashboard'),
+        'route' => route('admin.dashboard'),
     ],
     [
         'name' => 'Familias',
@@ -14,7 +14,7 @@
             Nuevo
         </a>
     </x-slot>
-    
+
     @if ($families->count())
 
         <div class="relative overflow-x-auto">

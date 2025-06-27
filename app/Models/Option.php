@@ -18,6 +18,7 @@ class Option extends Model
     public function products()
     {
         return $this->belongsToMany(Option::class)
+            ->using(OptionProduct::class)
             ->withPivot('value')
             ->withTimestamps();
     }

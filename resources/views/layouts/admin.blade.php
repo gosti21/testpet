@@ -49,9 +49,8 @@
                 @include('layouts.partials.admin.breadcrumb')
 
                 @isset($action)
-
                     <div>
-                        {{$action}}
+                        {{ $action }}
                     </div>
                 @endisset
             </div>
@@ -71,7 +70,7 @@
 
     @if (session('swal'))
         <script>
-            Swal.fire(!! json_encode(session('swal')) !!)
+            Swal.fire(@json(session('swal')));
         </script>
     @endif
 
