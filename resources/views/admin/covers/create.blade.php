@@ -12,9 +12,7 @@
     ],
 ]">
 
-    <form action="{{ route('admin.covers.store') }}"
-        method="POST"
-        enctype="multipart/form-data">
+    <form action="{{ route('admin.covers.store') }}" method="POST" enctype="multipart/form-data">
 
         @csrf
 
@@ -32,6 +30,9 @@
             <img src="{{ asset('no-image.png') }}" alt="Portada" class="aspect-[3/1] w-full object-cover object-center"
                 id="imgPreview">
         </figure>
+
+        <x-validation-errors class="mb-4" />
+
 
         <div class="mb-4">
             <x-label>
@@ -61,9 +62,7 @@
 
         <div class="mb-4 flex space-x-2">
             <label>
-                <x-input type="radio" name="is_active" value="1"
-                    checked
-                />
+                <x-input type="radio" name="is_active" value="1" checked />
                 Activo
             </label>
 

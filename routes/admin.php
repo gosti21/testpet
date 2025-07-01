@@ -18,5 +18,4 @@ Route::resource('families', controller: FamilyController::class);
 Route::resource('categories', controller: CategoryController::class);
 Route::resource('subcategories', controller: SubcategoryController::class);
 Route::resource('products', controller: ProductController::class);
-
 Route::resource('covers', CoverController::class);
