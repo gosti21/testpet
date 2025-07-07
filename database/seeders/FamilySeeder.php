@@ -16,9 +16,7 @@ class FamilySeeder extends Seeder
     public function run(): void
     {
 
-        Subcategory::truncate();
-        Category::truncate();
-        Family::truncate();
+
         $families = [
             'Alimentos' => [
                 'Perros' => [
@@ -321,6 +319,7 @@ class FamilySeeder extends Seeder
                 ],
             ],
         ];
+
         foreach ($families as $family => $categories) {
 
             $family = Family::create([

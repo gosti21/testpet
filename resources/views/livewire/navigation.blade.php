@@ -80,14 +80,20 @@
                     </x-dropdown>
 
 
-                    <button class="text-xl md:text-3xl">
-                        <i class="fas fa-shopping-cart text-white"></i>
-                    </button>
+                    <a href="{{route('cart.index')}}" class="relative">
+                        <i class="fas fa-shopping-cart text-white text-xl md:text-3xl"></i>
+
+                        <span id="cart-count"
+                            class="absolute -top-2 -right-4 inline-flex items-center justify-center w-6 h-6 bg-red-500 rounded-full text-white text-xs">
+                            {{ Cart::instance('shopping')->count() }}
+                        </span>
+                    </a>
                 </div>
             </div>
 
             <div class="t-4 md:hidden">
                 <x-input oninput="search(this.value)" class="w-full" placeholder="Buscar un producto" />
+
             </div>
 
 
@@ -157,7 +163,8 @@
                     <ul class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                         @foreach ($this->categories as $category)
                             <li>
-                                <a href="{{route('categories.show', $category)}}" class="text-red-600 font-semibold text-lg">
+                                <a href="{{ route('categories.show', $category) }}"
+                                    class="text-red-600 font-semibold text-lg">
                                     {{ $category->name }}
                                 </a>
 
@@ -165,7 +172,8 @@
 
                                     @foreach ($category->subcategories as $subcategory)
                                         <li>
-                                            <a href="{{route('subcategories.show', $subcategory)}}" class="text-sm text-gray-700 hover:text-purple-600">
+                                            <a href="{{ route('subcategories.show', $subcategory) }}"
+                                                class="text-sm text-gray-700 hover:text-purple-600">
                                                 {{ $subcategory->name }}
                                             </a>
                                         </li>
@@ -183,6 +191,12 @@
 
     @push('js')
         <script>
+            Livewire.on('cartUpdated', count => {
+
+                document.querySelector('#cart-count').textContent = count;
+
+            });
+
             function search(value) {
                 livewire.dispatch('search', {
                     search: value

@@ -6,6 +6,7 @@ use App\Models\Feature;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 
 class AddToCartVariants extends Component
 {
@@ -27,12 +28,12 @@ class AddToCartVariants extends Component
     #[Computed]
     public function variant()
     {
-        return $this->product->variants->filter(function($variant){
+        return $this->product->variants->filter(function ($variant) {
             return !array_diff($variant->features->pluck('id')->toArray(), $this->selectedFeatures);
         })->first();
     }
 
-        public function add_to_cart()
+    public function add_to_cart()
     {
         Cart::instance('shopping');
         Cart::add([
@@ -44,10 +45,18 @@ class AddToCartVariants extends Component
                 'image' => $this->variant->image,
                 'sku' => $this->variant->sku,
                 'features' => Feature::whereIn('id', $this->selectedFeatures)
-                                    ->pluck('description', 'id')
-                                    ->toArray()
+                    ->pluck('description', 'id')
+                    ->toArray()
             ]
         ]);
+
+        if (Auth::check()) {
+            Cart::store(Auth::id());
+        }
+
+        $this->dispatch('cartUpdated', Cart::count());
+
+
 
         $this->dispatch('swal', [
             'icon' => 'success',

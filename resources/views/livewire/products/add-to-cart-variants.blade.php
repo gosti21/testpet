@@ -6,7 +6,8 @@
             <div class="col-span-1">
 
                 <figure>
-                    <img src="{{ $this->variant->image }}" class="aspect-[1/1] w-full object-cover object-center" alt="">
+                    <img src="{{ $this->variant->image }}" class="aspect-[1/1] w-full object-cover object-center"
+                        alt="">
                 </figure>
 
 
@@ -84,9 +85,10 @@
                                             @break
 
                                             @case(2)
-                                                <div class="p-0.5 border-2 rounded-lg flex items-center -mt-1.5 {{ $selectedFeatures[$option->id] == $feature['id'] ? 'border-green-600' : 'border-transparent'}}">
+                                                <div
+                                                    class="p-0.5 border-2 rounded-lg flex items-center -mt-1.5 {{ $selectedFeatures[$option->id] == $feature['id'] ? 'border-green-600' : 'border-transparent' }}">
                                                     <button class="w-20 h-8 rounded-lg border border-gray-200"
-                                                        wire:click="$set('selectedFeatures.{{$option->id}}', {{$features['id']}})"
+                                                        wire:click="$set('selectedFeatures.{{ $option->id }}', {{ $features['id'] }})"
                                                         style="background-color: {{ $features['value'] }}">
 
                                                     </button>
