@@ -74,3 +74,4 @@
     @endpush
 
 </x-admin-layout>
+

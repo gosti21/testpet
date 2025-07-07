@@ -74,6 +74,7 @@
 
             </div>
 
+
             <div class="mb-4">
 
                 <x-label class="mb-1">
@@ -126,6 +127,17 @@
                     placeholder="Por favor ingrese el precio del producto" />
             </div>
 
+            @empty($product->variants->count() > 0)
+                <div class="mb-4">
+                    <x-label class="mb-1">
+                        Stock
+                    </x-label>
+
+                    <x-input type="number" wire:model="productEdit.stock" class="w-full"
+                        placeholder="Por favor ingrese el stock del producto" />
+                </div>
+            @endempty
+
             <div class="flex justify-end">
                 <div>
                     <x-danger-button onclick="confirmDelete()">
@@ -135,11 +147,12 @@
                     <x-button class="ml-2">
                         Actualizar
                     </x-button>
-
                 </div>
             </div>
         </div>
     </form>
+
+
 
     <form action="{{ route('admin.products.destroy', $product) }}" method="POST" id="delete-form">
         @csrf

@@ -16,8 +16,13 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('image_path')->nullable();
 
+            $table->integer('stock')
+                ->unsigned()
+                ->default(0);
+
             $table->foreignId('product_id')
-                    ->constrained();
+                ->constrained()
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -1,6 +1,5 @@
 <div>
 
-
     <form wire:submit="store">
 
         <figure class="mb-4 relative">

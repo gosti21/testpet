@@ -18,8 +18,11 @@ class Product extends Model
         'description',
         'image_path',
         'price',
+        'stock',
         'subcategory_id'
     ];
+
+
 
     public function scopeVerifyFamily($query, $family_id)
     {
@@ -91,7 +94,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Option::class)
             ->using(OptionProduct::class)
-            ->withPivot('value')
+            ->withPivot('features')
             ->withTimestamps();
     }
 }

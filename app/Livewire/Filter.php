@@ -36,7 +36,7 @@ class Filter extends Component
         $products = Product::verifyFamily($this->family_id)
             ->verifyCategory($this->category_id)
             ->verifySubcategory($this->subcategory_id)
-            ->customerOrder($this->orderBy)
+            ->customOrder($this->orderBy)
 
             ->selectFeatures($this->selected_features)
             ->when($this->search, function ($query) {

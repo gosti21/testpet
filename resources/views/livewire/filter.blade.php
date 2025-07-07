@@ -54,7 +54,7 @@
                     Ordenar por:
                 </span>
 
-                <x-select wire:model.live="orderBy">
+                <select wire:model.live="orderBy">
                     <option value="1">
                         Relevancia
                     </option>
@@ -66,7 +66,7 @@
                     <option value="3">
                         Precio: Menor a mayor
                     </option>
-                </x-select>
+                </select>
             </div>
 
             <hr class="my-4">
@@ -85,7 +85,7 @@
                                 S/ {{ $product->price }}
                             </p>
 
-                            <a href="" class="btn btn-blue block w-full text-center">
+                            <a href="{{route('products.show', $product)}}" class="btn btn-blue block w-full text-center">
                                 Ver mas
                             </a>
                         </div>

@@ -32,7 +32,7 @@ class NewOptionForm extends Form
             if ($this->type == 1) {
                 $rules['features.' . $index . '.value'] = 'required';
             } else {
-                $rules['features.' . $index . '.value'] = 'required|regex:/^#[a-f0-9[]{6}$/i';
+                $rules['features.' . $index . '.value'] = 'required|regex:/^#[a-f0-9]{6}$/i';
             }
             $rules['features.' . $index . '.description'] = 'required|max:255';
         }
@@ -49,7 +49,7 @@ class NewOptionForm extends Form
         ];
 
         foreach ($this->features as $index => $feature) {
-            $attributes['features.' . $index . '.value'] = 'valor '. ($index + 1);
+            $attributes['features.' . $index . '.value'] = 'valor ' . ($index + 1);
             $attributes['features.' . $index . '.description'] = 'description ' . ($index + 1);
         }
 

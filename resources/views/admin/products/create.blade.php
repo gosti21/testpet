@@ -5,7 +5,7 @@
     ],
     [
         'name' => 'Productos',
-        'rotue' => route('admin.products.index')
+        'route' => route('admin.products.index')
     ],
     [
         'name' => 'Nuevo',
