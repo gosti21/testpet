@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('variants', function (Blueprint $table) {
             $table->id();
             $table->string('sku')->nullable();
-            $table->string('image_path')->nullable();
+            /*$table->string('image_path')->nullable();*/
 
-            $table->integer('stock')
+            /*$table->integer('stock')
                 ->unsigned()
-                ->default(0);
+                ->default(0);*/
 
             $table->foreignId('product_id')
                 ->constrained()

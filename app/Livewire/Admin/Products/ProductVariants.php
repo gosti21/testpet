@@ -4,7 +4,9 @@ namespace App\Livewire\Admin\Products;
 
 use App\Models\Feature;
 use App\Models\Option;
+/*use App\Models\Option;*/
 use App\Models\Variant;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -26,10 +28,20 @@ class ProductVariants extends Component
         ]
     ];
 
-    public function mount()
+    public $variantEdit = [
+        'open' => false,
+        'id' => null,
+        'stock' => null,
+        'sku' => null,
+    ];
+
+    public $new_feature = [
+        /*$option->id => $feature->id*/];
+
+    /*public function mount()
     {
         $this->options = Option::all();
-    }
+    }*/
 
     public function updateVariantOptionId()
     {
@@ -42,10 +54,58 @@ class ProductVariants extends Component
         ];
     }
 
+    #[computed()]
+    public function options()
+    {
+        return Option::whereDoesntHave('products', function ($query) {
+            $query->where('product_id', $this->product->id);
+        })->get();
+    }
+
+
     #[Computed()]
     public function features()
     {
         return Feature::where('option_id', $this->variant['option_id'])->get();
+    }
+
+    public function getFeatures($option_id)
+    {
+        $features = DB::table('option_product')
+            ->where('product_id', $this->product->id)
+            ->where('option_id', $option_id)
+            ->first()
+            ->features;
+
+        $features = collect(json_decode($features))->pluck('id');
+
+        return Feature::where('option_id', $option_id)
+            ->whereNotIn('id', $features)
+            ->get();
+    }
+
+    public function addNewFeature($option_id)
+    {
+        $this->validate([
+            'new_feature.' . $option_id => 'required',
+        ]);
+
+        $feature = Feature::find($this->new_feature[$option_id]);
+
+        $this->product->options()->updateExistingPivot($option_id, [
+            'features' => array_merge($this->product->options->find($option_id)->pivot->features, [
+                [
+                    'id' => $feature->id,
+                    'value' => $feature->value,
+                    'description' => $feature->description,
+                ]
+            ])
+        ]);
+
+        $this->product = $this->product->fresh();
+        $this->new_feature[$option_id] = '';
+
+        $this->generarVariantes();
     }
 
     public function addFeature()
@@ -82,9 +142,15 @@ class ProductVariants extends Component
             })
         ]);
 
+
+        Variant::where('product_id', $this->product->id)
+            ->whereHas('features', function ($query) use ($feature_id) {
+                $query->where('features.id', $feature_id);
+            })->delete();
+
         $this->product = $this->product->fresh();
 
-        $this->generarVariantes();
+        /*$this->generarVariantes();*/
     }
 
 
@@ -92,6 +158,8 @@ class ProductVariants extends Component
     {
         $this->product->options()->detach($option_id);
         $this->product = $this->product->fresh();
+
+        $this->product->variants()->delete();
 
         $this->generarVariantes();
     }
@@ -105,11 +173,16 @@ class ProductVariants extends Component
             'variant.features.*.description' => 'nullable',
         ]);
 
+        $features = collect($this->variant['features']);
+        $features = $features->unique('id')->values()->all();
+
+        dd($features);
+
         $this->product->options()->attach($this->variant['option_id'], [
-            'features' => $this->variant['features']
+            'features' => $features
         ]);
 
-        $this->product = $this->product->fresh();
+        //$this->product = $this->product->fresh();
 
         $this->generarVariantes();
 
@@ -123,9 +196,27 @@ class ProductVariants extends Component
 
         $combinaciones = $this->generarCombinaciones($features);
 
-        $this->product->variants()->delete();
 
         foreach ($combinaciones as $combinacion) {
+
+            $variant = Variant::where('product_id', $this->product->id)
+
+                ->has('features', count($combinacion))
+
+                ->whereHas('features', function ($query) use ($combinacion) {
+
+                    $query->whereIn('feature_id', $combinacion);
+                })
+
+                ->whereDoesntHave('features', function ($query) use ($combinacion) {
+
+                    $query->whereNotIn('feature_id', $combinacion);
+                })
+                ->first();
+
+            if ($variant) {
+                continue;
+            }
 
             $variant = Variant::create([
                 'product_id' => $this->product->id,
@@ -154,6 +245,33 @@ class ProductVariants extends Component
         }
 
         return $resultado;
+    }
+
+    public function editVariant(Variant $variant)
+    {
+        $this->variantEdit = [
+            'open' => true,
+            'id' => $variant->id,
+            'stock' => $variant->stock,
+            'sku' => $variant->sku,
+        ];
+    }
+
+    public function updateVariant()
+    {
+        $this->validate([
+            'variantEdit.stock' => 'required|numeric',
+            'variantEdit.sku' => 'required',
+        ]);
+        $variant = Variant::find($this->variantEdit['id']);
+
+        $variant->update([
+            'stock' => $this->variantEdit['stock'],
+            'sku' => $this->variantEdit['sku'],
+        ]);
+
+        $this->reset('variantEdit');
+        $this->product = $this->product->fresh();
     }
 
     public function render()

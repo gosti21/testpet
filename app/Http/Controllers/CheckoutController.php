@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
+use App\Models\Order;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class CheckoutController extends Controller
 {
+/*    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+*/
     public function index()
     {
         $access_token = $this->generateAccessToken();
@@ -85,12 +93,36 @@ class CheckoutController extends Controller
             "countable" => true,
             "order" => [
                 "tokenId" => $request->transactionToken,
-                "purchaseNumber" => $request->purchasenumber,
+                "purchaseNumber" => $request->purchasenumber, //reparalo
                 "amount" => $request->amount,
                 "currency" => "PEN",
             ]
         ])->json();
 
-        return $response;
+        session()->flash('niubiz', [
+            'response' => $response,
+            "purchaseNumber" => $request->purchasenumber, //reparalo
+        ]);
+
+        if (isset($response['dataMap']) && $response['dataMap']['ACTION_CODE'] == '000') {
+
+            $address = Address::where('user_id', Auth::id())
+                ->where('default', true)
+                ->first();
+
+            Order::create([
+                'user_id' => Auth::id(),
+                'content' => Cart::instance('shopping')->content(),
+                'address' => $address,
+                'payment_id' => $response['dataMap']['TRANSACTION_ID'],
+                'total' => Cart::subtotal(),
+            ]);
+
+            Cart::destroy();
+
+            return redirect()->route('gracias');
+        }
+
+        return redirect()->route('checkout.index');
     }
 }

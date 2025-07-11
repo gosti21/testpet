@@ -81,6 +81,7 @@
                 <a href="{{route('shipping.index')}}" class="btn btn-gray block w-full text-center">
                     Continuar compra
                 </a>
+
             </div>
         </div>
 

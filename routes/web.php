@@ -8,8 +8,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\WelcomeController;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variant;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +25,19 @@ Route::get('products/{product}', [ProductController::class, 'show'])->name('prod
 
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 
-Route::get('shipping', [ShippingController::class, 'index'])->name('shipping.index');
+Route::get('shipping', [ShippingController::class, 'index'])
+    ->middleware('auth')
+    ->name('shipping.index');
 
-Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('checkout', [CheckoutController::class, 'index'])
+    ->name('checkout.index');
 
-Route::post('checkout/paid', [CheckoutController::class, 'paid'])->name('checkout.paid');
+Route::post('checkout/paid', [CheckoutController::class, 'paid'])
+    ->name('checkout.paid');
 
+Route::get('gracias', function(){
+    return view('gracias');
+});
 
 Route::middleware([
     'auth:sanctum',
@@ -80,8 +89,15 @@ function generarCombinaciones($arrays, $indice = 0, $combinacion = [])
 
 Route::get('prueba', function () {
 
-    Cart::instance('shopping');
+    $order = Order::first();
 
-    return Cart::content();
+    $pdf = Pdf::loadView('orders.ticket', compact('order'))->setPaper('a5');
+
+    $pdf->save(Storage_path('app/public/tickets/ticket-' . $order->id . '.pdf'));
+
+    $order->pdf_path = 'tickets/ticket-' . $order->id . '.pdf';
+    $order->save();
+    return view('orders.ticket', compact('order'));
 
 });
+

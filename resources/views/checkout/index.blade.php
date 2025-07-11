@@ -141,8 +141,50 @@
                         <button onclick="VisanetCheckout.open()" class="btn btn-blue w-full">
                             Finalizar pedido
                         </button>
-
                     </div>
+
+                    @if (session('niubiz'))
+                        @php
+                            $niubiz = session('niubiz');
+
+                            $response = $niubiz['response'];
+                            $purchaseNumber = $niubiz['purchaseNumber'];
+                        @endphp
+
+                        @isset($response['data'])
+                            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                                role="alert">
+
+                                <p class="mb-4">
+                                    {{ $response['data']['ACTION_DESCRIPTION'] }}
+                                </p>
+
+                                <p>
+                                    <b>Numero de pedido</b>
+                                    <hr>
+                                    {{ $purchaseNumber }}
+                                </p>
+
+                                <p>
+                                    <b>Fecha y hora del pedido</b>
+
+                                    {{ now()->createFromFormat('ymdHis', $response['data']['TRANSACTION_DATE'])->format('d-m-y H:i:s') }}
+
+                                </p>
+
+                                @isset($response['data']['CARD'])
+
+                                <p>
+                                    <b>Tarjeta:</b>
+                                    {{ $response['data']['CARD'] }} ({{ $response['data']['CARD'] }})
+                                </p>
+                                @endisset
+
+
+
+                            </div>
+                        @endisset
+                    @endif
 
                 </div>
             </div>
@@ -168,7 +210,8 @@
                     timeouturl: 'about:blank',
                     merchantlogo: 'img/comercio.png',
                     formbuttoncolor: '#000000',
-                    action: "{{route('checkout.paid')}}?amount" + amount + "&purchaseNumber=" + purchasenumber,
+                    action: "{{ route('checkout.paid') }}?amount=" + amount + "&purchasenumber=" +
+                        purchasenumber,
                     complete: function(params) {
                         alert(JSON.stringify(params));
                     }
